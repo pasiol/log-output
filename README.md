@@ -5,7 +5,7 @@ Exercise 1.01
     docker build -t pasiol/log-output .
     docker push pasiol/log-output
 
-    pasiol@lab:~$ kubectl create deployment log-output --image=pasiol/log-output sha256:173888d2d767bd8992d62364c02b186e849984ff8f09ed4c91d49d8a3a631294
+    pasiol@lab:~$ kubectl create deployment log-output --image=pasiol/log-output@sha256:173888d2d767bd8992d62364c02b186e849984ff8f09ed4c91d49d8a3a631294
     deployment.apps/log-output created
     pasiol@lab:~$ kubectl get deployments
     NAME         READY   UP-TO-DATE   AVAILABLE   AGE

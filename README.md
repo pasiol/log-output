@@ -1,5 +1,7 @@
 # log-output
 
+Exercise 1.01
+
     docker build -t pasiol/log-output .
     docker push pasiol/log-output
 

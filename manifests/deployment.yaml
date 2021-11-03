@@ -1,17 +1,17 @@
 apiVersion: apps/v1
-  kind: Deployment
-  metadata:
-    name: log-output
-  spec:
-    replicas: 1
-    selector:
-      matchLabels:
+kind: Deployment
+metadata:
+  name: log-output
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: log-output
+  template:
+    metadata:
+      labels:
         app: log-output
-    template:
-      metadata:
-        labels:
-          app: log-output
-      spec:
-        containers:
-        - name: log-output
-          image: pasiol/log-output@sha256:173888d2d767bd8992d62364c02b186e849984ff8f09ed4c91d49d8a3a631294
+    spec:
+      containers:
+      - name: log-output
+        image: pasiol/log-output@sha256:173888d2d767bd8992d62364c02b186e849984ff8f09ed4c91d49d8a3a631294

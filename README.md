@@ -5,8 +5,6 @@ Exercise 1.03
 [https://github.com/pasiol/log-output/tree/1.03]
 
     pasiol@lab:~$ kubectl apply -f https://raw.githubusercontent.com/pasiol/log-output/1.03/manifests/deployment.yaml
-    error: error parsing https://raw.githubusercontent.com/pasiol/log-output/1.03/manifests/deployment.yaml: error converting YAML to JSON: yaml: line 2: mapping values are not allowed in this context
-    pasiol@lab:~$ kubectl apply -f https://raw.githubusercontent.com/pasiol/log-output/1.03/manifests/deployment.yaml
     deployment.apps/log-output created
     pasiol@lab:~$ kubectl get deployments
     NAME         READY   UP-TO-DATE   AVAILABLE   AGE

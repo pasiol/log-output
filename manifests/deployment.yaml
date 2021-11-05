@@ -14,4 +14,7 @@ spec:
     spec:
       containers:
       - name: log-output
-        image: pasiol/log-output@sha256:173888d2d767bd8992d62364c02b186e849984ff8f09ed4c91d49d8a3a631294
+        env:
+          - name: PORT
+            value: "8888"
+        image: pasiol/log-output@sha256:7b3364e2226a9c12c991aeadbd28d3b15e423b484e803fd5fa36e5dc69a882df

@@ -17,4 +17,4 @@ spec:
         env:
           - name: PORT
             value: "8888"
-        image: pasiol/log-output@sha256:2fc295bc378a7c97202797d1f16c473116c4605f9a9bab3a139248bfd83b3252
+        image: pasiol/log-output@sha256:5e1d24906f9cdb06341eff06b8c07fd8f2b88604b11845b0c85e7ecf0b770e80

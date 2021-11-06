@@ -10,7 +10,7 @@ import (
 )
 
 func handler(w http.ResponseWriter, r *http.Request) {
-	log.Printf("request %s, %s", r.Method, r.URL)
+	log.Printf("request %s, %s, %s", r.Method, r.URL, r.RemoteAddr)
 	u := uuid.New()
 	localTime := time.Now()
 	fmt.Printf("%v %s\n", localTime.UTC().Format(time.RFC3339Nano), u.String())
@@ -18,7 +18,7 @@ func handler(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		log.Fatal("writing the response failed")
 	}
-	log.Printf("%d bytes written", bytes)
+	log.Printf("%d bytes written %s", bytes, r.RemoteAddr)
 }
 
 func main() {
@@ -26,7 +26,7 @@ func main() {
 	if port == "" {
 		port = "8000"
 	}
-	log.Printf(" Server started in port %s.", port)
+	log.Printf("server started in port %s.", port)
 
 	http.HandleFunc("/", handler)
 	log.Fatal(http.ListenAndServe(fmt.Sprintf("0.0.0.0:%s", port), nil))

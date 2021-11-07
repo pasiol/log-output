@@ -1,4 +1,4 @@
-module log-output
+module writer
 
 go 1.16
 

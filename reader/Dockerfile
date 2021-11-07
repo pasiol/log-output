@@ -21,7 +21,6 @@ FROM dev as build
 RUN (([ ! -d "${APP_PATH}/vendor" ] && go mod download && go mod vendor) || true)
 RUN go build -ldflags="-s -w" -mod vendor -o ${APP_BUILD_NAME} main.go
 RUN chmod +x ${APP_BUILD_NAME}
-RUN mkdir pvc
 
 FROM scratch AS prod
 
@@ -30,6 +29,5 @@ ENV APP_BUILD_PATH="/var/app" \
 WORKDIR ${APP_BUILD_PATH}
 COPY --from=build ${APP_BUILD_PATH}/${APP_BUILD_NAME} ${APP_BUILD_PATH}/
 
-EXPOSE ${APP_PORT}
 ENTRYPOINT ["/var/app/main"]
 CMD ""

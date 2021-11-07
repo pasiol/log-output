@@ -1,7 +1,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: log-output
+  name: log-output-dep
 spec:
   replicas: 1
   selector:
@@ -12,9 +12,30 @@ spec:
       labels:
         app: log-output
     spec:
+      volumes:
+        - name: shared-log-output
+          emptyDir:
+            {}
       containers:
-      - name: log-output
+      - name: log-output-writer
+        image: pasiol/log-output-writer@sha256:201ecfd14c104ddb4a95746bbc59cfc989cfec2c17abd28c510c9213599bb3c7
+        volumeMounts:
+          - mountPath: /output
+            name: shared-log-ouput
         env:
-          - name: PORT
-            value: "8888"
-        image: pasiol/log-output@sha256:5e1d24906f9cdb06341eff06b8c07fd8f2b88604b11845b0c85e7ecf0b770e80
+          - name: APP_LOG_FILE
+            value: "writer.log"
+          - name: APP_OUTPUT_FILE
+            value: "/output/uuids.txt"
+      - name: log-output-reader
+        image: pasiol/log-output-reader@sha256:775301befdce34e97deb741681ed377eba3aa163048cf600cd52b0d65cb61d16
+        volumeMounts:
+          - mountPath: /input
+            name: shared-log-output
+        env:
+          - name: APP_LOG_FILE
+            value: "reader.log"
+          - name: APP_INPUT_FILE
+            value: "/input/uuids.txt"
+          - name: APP_PORT
+            value: "3000"

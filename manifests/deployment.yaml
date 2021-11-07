@@ -13,29 +13,28 @@ spec:
         app: log-output
     spec:
       volumes:
-        - name: shared-log-output
-          emptyDir:
-            {}
+        - name: shared-data
+          emptyDir: {}
       containers:
       - name: log-output-writer
         image: pasiol/log-output-writer@sha256:201ecfd14c104ddb4a95746bbc59cfc989cfec2c17abd28c510c9213599bb3c7
         volumeMounts:
-          - mountPath: /output
-            name: shared-log-ouput
+          - mountPath: ./data
+            name: shared-data
         env:
           - name: APP_LOG_FILE
             value: "writer.log"
           - name: APP_OUTPUT_FILE
-            value: "/output/uuids.txt"
+            value: "./data/uuids.txt"
       - name: log-output-reader
         image: pasiol/log-output-reader@sha256:775301befdce34e97deb741681ed377eba3aa163048cf600cd52b0d65cb61d16
         volumeMounts:
-          - mountPath: /input
-            name: shared-log-output
+          - mountPath: ./data
+            name: shared-data
         env:
           - name: APP_LOG_FILE
             value: "reader.log"
           - name: APP_INPUT_FILE
-            value: "/input/uuids.txt"
+            value: "./data/uuids.txt"
           - name: APP_PORT
             value: "3000"

@@ -59,6 +59,7 @@ func unwindLToS(s []string) string {
 }
 
 func handler(w http.ResponseWriter, r *http.Request) {
+	log.Printf("getting request from %s", r.RemoteAddr)
 	var uuids []string
 	if fileExists(os.Getenv("APP_INPUT_FILE")) {
 		uuids = readUUIDs(os.Getenv("APP_INPUT_FILE"))
@@ -66,10 +67,11 @@ func handler(w http.ResponseWriter, r *http.Request) {
 		log.Printf("opening input file failed: %s", os.Getenv("APP_INPUT_FILE"))
 	}
 
-	_, err := fmt.Fprintf(w, "%s", unwindLToS(uuids))
+	bytes, err := fmt.Fprintf(w, "%s", unwindLToS(uuids))
 	if err != nil {
 		log.Fatalf("writing response failed %s", r.RemoteAddr)
 	}
+	log.Printf("%d bytes written %s", bytes, r.RemoteAddr)
 }
 
 func main() {
@@ -86,19 +88,13 @@ func main() {
 	if err != nil {
 		log.Fatalf("Opening log file failed: %s", err)
 	}
-	defer func(f *os.File) {
-		err := f.Close()
-		if err != nil {
-			log.Fatalf("closing file failed %s %s", os.Getenv("APP_LOG_FILE"), err)
-		}
-	}(f)
+
 	wrt := io.MultiWriter(os.Stdout, f)
 	log.SetOutput(wrt)
 	log.Printf("starting reader")
 
-	address := "0.0.0.0:" + os.Getenv("APP_PORT")
-	log.Printf("starting in address %s.", address)
+	log.Printf("starting in address 0.0.0.0:%s.", port)
 
 	http.HandleFunc("/", handler)
-	log.Fatal(http.ListenAndServe(address, nil))
+	log.Fatal(http.ListenAndServe(fmt.Sprintf("0.0.0.0:%s", port), nil))
 }

@@ -6,35 +6,35 @@ spec:
   replicas: 1
   selector:
     matchLabels:
-      app: log-output
+      app: log-output-dep
   template:
     metadata:
       labels:
-        app: log-output
+        app: log-output-dep
     spec:
       volumes:
         - name: shared-data
           emptyDir: {}
       containers:
-      - name: log-output-writer
-        image: pasiol/log-output-writer@sha256:201ecfd14c104ddb4a95746bbc59cfc989cfec2c17abd28c510c9213599bb3c7
-        volumeMounts:
-          - mountPath: ./data
-            name: shared-data
-        env:
-          - name: APP_LOG_FILE
-            value: "writer.log"
-          - name: APP_OUTPUT_FILE
-            value: "./data/uuids.txt"
-      - name: log-output-reader
-        image: pasiol/log-output-reader@sha256:775301befdce34e97deb741681ed377eba3aa163048cf600cd52b0d65cb61d16
-        volumeMounts:
-          - mountPath: ./data
-            name: shared-data
-        env:
-          - name: APP_LOG_FILE
-            value: "reader.log"
-          - name: APP_INPUT_FILE
-            value: "./data/uuids.txt"
-          - name: APP_PORT
-            value: "3000"
+        - name: log-output-writer
+          image: pasiol/log-output-writer@sha256:82e06edab1b22c016aec7400fe1b957a8f85e4f93bcb7a98e6db4fcf98e89319
+          volumeMounts:
+            - mountPath: /var/app/data
+              name: shared-data
+          env:
+            - name: APP_LOG_FILE
+              value: "writer.log"
+            - name: APP_OUTPUT_FILE
+              value: "/var/app/data/uuids.txt"
+        - name: log-output-reader
+          image: pasiol/log-output-reader@sha256:d3a511863fdab9f78d345fb9af371009111c903a5752a0bc0463f6943e48a9b8
+          volumeMounts:
+            - mountPath: /var/app/data
+              name: shared-data
+          env:
+            - name: APP_LOG_FILE
+              value: "reader.log"
+            - name: APP_INPUT_FILE
+              value: "/var/app/data/uuids.txt"
+            - name: APP_PORT
+              value: "3000"

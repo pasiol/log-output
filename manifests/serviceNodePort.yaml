@@ -1,0 +1,14 @@
+kind: Service
+metadata:
+  name:
+    log-output-svc
+spec:
+  type: NodePort
+  selector:
+    app: log-output-dep
+  ports:
+    - name: http
+      nodePort: 30080
+      protocol: TCP
+      port: 80
+      targetPort: 3000

@@ -14,7 +14,8 @@ spec:
     spec:
       volumes:
         - name: shared-data
-          emptyDir: {}
+          persistentVolumeClaim:
+            claimName: log-output-claim
       containers:
         - name: log-output-writer
           image: pasiol/log-output-writer@sha256:82e06edab1b22c016aec7400fe1b957a8f85e4f93bcb7a98e6db4fcf98e89319

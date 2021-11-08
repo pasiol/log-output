@@ -50,6 +50,21 @@ func readUUIDs(filename string) []string {
 	return content
 }
 
+func readPingPong(filename string) string {
+	f, err := os.Open(filename)
+	if err != nil {
+		log.Fatalf("opening file %s failed: %s", filename, err)
+	}
+	scanner := bufio.NewScanner(f)
+	content := ""
+	for scanner.Scan() {
+		line := scanner.Text()
+		content = line + "\n"
+	}
+	log.Printf("readed succesfully file %s", filename)
+	return content
+}
+
 func unwindLToS(s []string) string {
 	o := ""
 	for _, row := range s {
@@ -61,13 +76,19 @@ func unwindLToS(s []string) string {
 func handler(w http.ResponseWriter, r *http.Request) {
 	log.Printf("getting request from %s", r.RemoteAddr)
 	var uuids []string
+	pingpong := ""
 	if fileExists(os.Getenv("APP_INPUT_FILE")) {
 		uuids = readUUIDs(os.Getenv("APP_INPUT_FILE"))
 	} else {
 		log.Printf("opening input file failed: %s", os.Getenv("APP_INPUT_FILE"))
 	}
 
-	bytes, err := fmt.Fprintf(w, "%s", unwindLToS(uuids))
+	if fileExists(os.Getenv("APP_INPUT_FILE_PING_PONG")) {
+		pingpong = readPingPong(os.Getenv("APP_INPUT_FILE_PING_PONG"))
+	} else {
+		log.Printf("Cannot find input file: %s", os.Getenv("APP_INPUT_FILE_PING_PONG"))
+	}
+	bytes, err := fmt.Fprintf(w, "%s%s", unwindLToS(uuids), pingpong)
 	if err != nil {
 		log.Fatalf("writing response failed %s", r.RemoteAddr)
 	}

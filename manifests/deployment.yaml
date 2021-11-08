@@ -39,3 +39,5 @@ spec:
               value: "/var/app/data/uuids.txt"
             - name: APP_PORT
               value: "3000"
+            - name: APP_INPUT_FILE_PING_PONG
+              value: "/var/app/data/pingpong.txt"

@@ -65,12 +65,8 @@ func readPingPong(filename string) string {
 	return content
 }
 
-func unwindLToS(s []string) string {
-	o := ""
-	for _, row := range s {
-		o = o + row + "\n"
-	}
-	return o
+func lastRow(s []string) string {
+	return fmt.Sprintf("%s\n", s[len(s)-1])
 }
 
 func handler(w http.ResponseWriter, r *http.Request) {
@@ -88,7 +84,7 @@ func handler(w http.ResponseWriter, r *http.Request) {
 	} else {
 		log.Printf("Cannot find input file: %s", os.Getenv("APP_INPUT_FILE_PING_PONG"))
 	}
-	bytes, err := fmt.Fprintf(w, "%s%s", unwindLToS(uuids), pingpong)
+	bytes, err := fmt.Fprintf(w, "%s%s", lastRow(uuids), pingpong)
 	if err != nil {
 		log.Fatalf("writing response failed %s", r.RemoteAddr)
 	}

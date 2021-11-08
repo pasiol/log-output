@@ -13,3 +13,7 @@ spec:
                 name: log-output-svc
                 port:
                   number: 3000
+            - path: /pingpong
+                backend:
+                  serviceName: ping-pong-svc
+                  servicePort: 8888

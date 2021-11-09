@@ -19,6 +19,7 @@ spec:
       containers:
         - name: log-output-writer
           image: pasiol/log-output-writer@sha256:82e06edab1b22c016aec7400fe1b957a8f85e4f93bcb7a98e6db4fcf98e89319
+          imagePullPolicy: IfNotPresent
           volumeMounts:
             - mountPath: /var/app/data
               name: shared-data
@@ -29,6 +30,7 @@ spec:
               value: "/var/app/data/uuids.txt"
         - name: log-output-reader
           image: pasiol/log-output-reader@sha256:7e14e5e86c9003e49117e7304d91b22a291492da8b6839cc89318aca16e8415d
+          imagePullPolicy: IfNotPresent
           volumeMounts:
             - mountPath: /var/app/data
               name: shared-data
@@ -39,5 +41,5 @@ spec:
               value: "/var/app/data/uuids.txt"
             - name: APP_PORT
               value: "3000"
-            - name: APP_INPUT_FILE_PING_PONG
-              value: "/var/app/data/pingpong.txt"
+            - name: APP_PING_PONG_HOST
+              value: ping-pong-svc

@@ -2,6 +2,7 @@ package main
 
 import (
 	"bufio"
+	"errors"
 	"fmt"
 	"io"
 	"io/ioutil"
@@ -50,19 +51,28 @@ func readUUIDs(filename string) []string {
 	return content
 }
 
-func readPingPong(filename string) string {
-	f, err := os.Open(filename)
+func readPingPongService() (string, error) {
+	url := fmt.Sprintf("http://%s/pingpong", os.Getenv("APP_PING_PONG_HOST"))
+	response, err := http.Get(url)
 	if err != nil {
-		log.Fatalf("opening file %s failed: %s", filename, err)
+		return "", err
 	}
-	scanner := bufio.NewScanner(f)
-	content := ""
-	for scanner.Scan() {
-		line := scanner.Text()
-		content = line + "\n"
+	if response.StatusCode != 200 {
+		log.Printf("get request status code: %d", response.StatusCode)
+		return "", errors.New("get request failed")
 	}
-	log.Printf("readed succesfully file %s", filename)
-	return content
+	defer func(Body io.ReadCloser) {
+		err := Body.Close()
+		if err != nil {
+			log.Printf("closing get request body failed")
+		}
+	}(response.Body)
+
+	body, err := ioutil.ReadAll(response.Body)
+	if err != nil {
+		return "", err
+	}
+	return string(body), nil
 }
 
 func lastRow(s []string) string {
@@ -72,18 +82,17 @@ func lastRow(s []string) string {
 func handler(w http.ResponseWriter, r *http.Request) {
 	log.Printf("getting request from %s", r.RemoteAddr)
 	var uuids []string
-	pingpong := ""
 	if fileExists(os.Getenv("APP_INPUT_FILE")) {
 		uuids = readUUIDs(os.Getenv("APP_INPUT_FILE"))
 	} else {
 		log.Printf("opening input file failed: %s", os.Getenv("APP_INPUT_FILE"))
 	}
 
-	if fileExists(os.Getenv("APP_INPUT_FILE_PING_PONG")) {
-		pingpong = readPingPong(os.Getenv("APP_INPUT_FILE_PING_PONG"))
-	} else {
-		log.Printf("Cannot find input file: %s", os.Getenv("APP_INPUT_FILE_PING_PONG"))
+	pingpong, err := readPingPongService()
+	if err != nil {
+		log.Printf("reading pingpong service failed: %s", err)
 	}
+
 	bytes, err := fmt.Fprintf(w, "%s%s", lastRow(uuids), pingpong)
 	if err != nil {
 		log.Fatalf("writing response failed %s", r.RemoteAddr)

@@ -42,4 +42,4 @@ spec:
             - name: APP_PORT
               value: "3000"
             - name: APP_PING_PONG_HOST
-              value: ping-pong-svc
+              value: ping-pong-svc:8888

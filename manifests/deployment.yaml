@@ -43,6 +43,7 @@ spec:
               name: shared-data
             - mountPath: /var/app/.env
               name: reader-config
+              subPath: ".env"
           env:
             - name: APP_LOG_FILE
               value: "reader.log"

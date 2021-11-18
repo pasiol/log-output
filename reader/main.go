@@ -4,6 +4,7 @@ import (
 	"bufio"
 	"errors"
 	"fmt"
+	"github.com/joho/godotenv"
 	"io"
 	"io/ioutil"
 	"log"
@@ -93,7 +94,7 @@ func handler(w http.ResponseWriter, r *http.Request) {
 		log.Printf("reading pingpong service failed: %s", err)
 	}
 
-	bytes, err := fmt.Fprintf(w, "%s%s", lastRow(uuids), pingpong)
+	bytes, err := fmt.Fprintf(w, "%s\n%s%s", os.Getenv("MESSAGE"), lastRow(uuids), pingpong)
 	if err != nil {
 		log.Fatalf("writing response failed %s", r.RemoteAddr)
 	}
@@ -101,6 +102,10 @@ func handler(w http.ResponseWriter, r *http.Request) {
 }
 
 func main() {
+	err := godotenv.Load()
+	if err != nil {
+		log.Print("Reading environment failed.")
+	}
 
 	port := os.Getenv("APP_PORT")
 	if port == "" {

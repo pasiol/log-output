@@ -17,6 +17,12 @@ spec:
         - name: shared-data
           persistentVolumeClaim:
             claimName: log-output-claim
+        - name: reader-config
+          configMap:
+            name: exercise-variables
+            items:
+              - key: "env.properties"
+                path: ".env"
       containers:
         - name: log-output-writer
           image: pasiol/log-output-writer@sha256:82e06edab1b22c016aec7400fe1b957a8f85e4f93bcb7a98e6db4fcf98e89319
@@ -30,11 +36,13 @@ spec:
             - name: APP_OUTPUT_FILE
               value: "/var/app/data/uuids.txt"
         - name: log-output-reader
-          image: pasiol/log-output-reader@sha256:89ed15ba7acb7eac895958346deed05df5819f593e5e2c19126002965c75f69b
+          image: pasiol/log-output-reader@sha256:2d67cb157ae63a24dcc697757d019317ef55d6bd8925bba58494159567021893
           imagePullPolicy: IfNotPresent
           volumeMounts:
             - mountPath: /var/app/data
               name: shared-data
+            - mountPath: /var/app
+              name: reader-config
           env:
             - name: APP_LOG_FILE
               value: "reader.log"

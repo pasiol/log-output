@@ -36,7 +36,7 @@ spec:
             - name: APP_OUTPUT_FILE
               value: "/var/app/data/uuids.txt"
         - name: log-output-reader
-          image: pasiol/log-output-reader@sha256:2d67cb157ae63a24dcc697757d019317ef55d6bd8925bba58494159567021893
+          image: pasiol/log-output-reader@sha256:34a57b9cbaa14204ec7386607016819a0f5b58fe8306d6555479e8dfe20dba05
           imagePullPolicy: IfNotPresent
           volumeMounts:
             - mountPath: /var/app/data

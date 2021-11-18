@@ -29,6 +29,7 @@ ENV APP_BUILD_PATH="/var/app" \
     APP_BUILD_NAME="main"
 WORKDIR ${APP_BUILD_PATH}
 RUN mkdir "data"
+RUN echo 'MESSAGE="Hello K8S"' > /var/app/.env
 COPY --from=build ${APP_BUILD_PATH}/${APP_BUILD_NAME} ${APP_BUILD_PATH}/
 EXPOSE 3000
 

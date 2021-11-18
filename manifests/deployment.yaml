@@ -41,7 +41,7 @@ spec:
           volumeMounts:
             - mountPath: /var/app/data
               name: shared-data
-            - mountPath: /var/app
+            - mountPath: /var/app/.env
               name: reader-config
           env:
             - name: APP_LOG_FILE

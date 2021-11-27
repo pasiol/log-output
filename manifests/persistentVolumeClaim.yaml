@@ -1,12 +1,11 @@
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: log-output-claim
+  name: log-output-pvc
   namespace: applications
 spec:
-  storageClassName: manual
   accessModes:
     - ReadWriteOnce
   resources:
     requests:
-      storage: 1Gi
+      storage: 100Mi

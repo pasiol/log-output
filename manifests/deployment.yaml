@@ -16,7 +16,7 @@ spec:
       volumes:
         - name: shared-data
           persistentVolumeClaim:
-            claimName: log-output-claim
+            claimName: log-output-pvc
         - name: reader-config
           configMap:
             name: exercise-variables

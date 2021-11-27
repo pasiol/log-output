@@ -4,10 +4,10 @@ metadata:
   name: log-output-svc
   namespace: applications
 spec:
-  type: ClusterIP
+  type: NodePort
   selector:
     app: log-output-dep
   ports:
-    - port: 3000
+    - port: 80
       protocol: TCP
       targetPort: 3000

@@ -44,5 +44,6 @@ jobs:
           kustomize edit set image gcr.io/PROJECT_ID/IMAGE=gcr.io/$PROJECT_ID/$IMAGE_WRITER:${GITHUB_REF#refs/heads/}-$GITHUB_SHA
           kustomize edit set image gcr.io/PROJECT_ID/IMAGE=gcr.io/$PROJECT_ID/$IMAGE_READER:${GITHUB_REF#refs/heads/}-$GITHUB_SHA
           kustomize build . | kubectl apply -f -
-          kubectl rollout status deployment/$IMAGE
-          kubectl get services -o wide
+          kubectl rollout status deployment/$IMAGE_WRITER
+          kubectl rollout status deployment/$IMAGE_READER
+          kubectl get ing -o wide

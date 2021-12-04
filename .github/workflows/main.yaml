@@ -27,13 +27,13 @@ jobs:
       - run: gcloud --quiet auth configure-docker
       - run: gcloud container clusters get-credentials "$GKE_CLUSTER" --zone "$GKE_ZONE"
       - name: Build image writer
-        run: docker build --tag "gcr.io/$PROJECT_ID/$IMAGE_WRITER:${GITHUB_REF#refs/heads/}-$GITHUB_SHA" ./writer/
+        run: docker build --tag "gcr.io/$PROJECT_ID/writer:${GITHUB_REF#refs/heads/}-$GITHUB_SHA" ./writer/
       - name: Publish
-        run: docker push "gcr.io/$PROJECT_ID/$IMAGE_WRITER:${GITHUB_REF#refs/heads/}-$GITHUB_SHA"
+        run: docker push "gcr.io/$PROJECT_ID/writer:${GITHUB_REF#refs/heads/}-$GITHUB_SHA"
       - name: Build image reader
-        run: docker build --tag "gcr.io/$PROJECT_ID/$IMAGE_READER:${GITHUB_REF#refs/heads/}-$GITHUB_SHA" ./reader/
+        run: docker build --tag "gcr.io/$PROJECT_ID/reader:${GITHUB_REF#refs/heads/}-$GITHUB_SHA" ./reader/
       - name: Publish
-        run: docker push "gcr.io/$PROJECT_ID/$IMAGE_READER:${GITHUB_REF#refs/heads/}-$GITHUB_SHA"
+        run: docker push "gcr.io/$PROJECT_ID/reader:${GITHUB_REF#refs/heads/}-$GITHUB_SHA"
       - name: Set up Kustomize
         uses: imranismail/setup-kustomize@v1
       - name: Deploy
@@ -41,8 +41,8 @@ jobs:
           kubectl create namespace ${GITHUB_REF#refs/heads/} || true
           kubectl config set-context --current --namespace=${GITHUB_REF#refs/heads/}
           kustomize edit set namespace ${GITHUB_REF#refs/heads/}
-          kustomize edit set image gcr.io/PROJECT_ID/IMAGE=gcr.io/$PROJECT_ID/$IMAGE_WRITER:${GITHUB_REF#refs/heads/}-$GITHUB_SHA
-          kustomize edit set image gcr.io/PROJECT_ID/IMAGE=gcr.io/$PROJECT_ID/$IMAGE_READER:${GITHUB_REF#refs/heads/}-$GITHUB_SHA
+          kustomize edit set image gcr.io/PROJECT_ID/IMAGE=gcr.io/$PROJECT_ID/writer:${GITHUB_REF#refs/heads/}-$GITHUB_SHA
+          kustomize edit set image gcr.io/PROJECT_ID/IMAGE=gcr.io/$PROJECT_ID/reader${GITHUB_REF#refs/heads/}-$GITHUB_SHA
           kustomize build . | kubectl apply -f -
           kubectl rollout status deployment/log-output-dep
           kubectl get ing -o wide

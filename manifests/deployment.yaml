@@ -25,7 +25,7 @@ spec:
                 path: ".env"
       containers:
         - name: log-output-writer
-          image: pasiol/log-output-writer@sha256:82e06edab1b22c016aec7400fe1b957a8f85e4f93bcb7a98e6db4fcf98e89319
+          image: gcr.io/PROJECT_ID/IMAGE_WRITER
           imagePullPolicy: IfNotPresent
           volumeMounts:
             - mountPath: /var/app/data
@@ -40,7 +40,7 @@ spec:
               cpu: "150m"
               memory: "10Mi"
         - name: log-output-reader
-          image: pasiol/log-output-reader@sha256:34a57b9cbaa14204ec7386607016819a0f5b58fe8306d6555479e8dfe20dba05
+          image: gcr.io/PROJECT_ID/IMAGE_READER
           imagePullPolicy: IfNotPresent
           volumeMounts:
             - mountPath: /var/app/data

@@ -2,6 +2,7 @@ package main
 
 import (
 	"bufio"
+	"encoding/json"
 	"errors"
 	"fmt"
 	"github.com/joho/godotenv"
@@ -35,6 +36,21 @@ func fileExists(filename string) bool {
 		return false
 	}
 	return !info.IsDir()
+}
+
+func respondWithError(w http.ResponseWriter, code int, message string) {
+	respondWithJSON(w, code, map[string]string{"error": message})
+}
+
+func respondWithJSON(w http.ResponseWriter, code int, payload interface{}) {
+	response, _ := json.Marshal(payload)
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(code)
+	bytes, err := w.Write(response)
+	if err != nil {
+		log.Printf("writing response failed: %s", err)
+	}
+	log.Printf("response bytes %d", bytes)
 }
 
 func readUUIDs(filename string) []string {
@@ -81,6 +97,23 @@ func lastRow(s []string) string {
 		return fmt.Sprintf("%s\n", s[len(s)-1])
 	}
 	return ""
+}
+
+func health(w http.ResponseWriter, r *http.Request) {
+	url := fmt.Sprintf("http://%s/health", os.Getenv("APP_PING_PONG_HOST"))
+	response, err := http.Get(url)
+	if err != nil {
+		respondWithError(w, http.StatusInternalServerError, err.Error())
+		return
+	}
+	if response.StatusCode == 200 {
+		respondWithJSON(w, http.StatusOK, map[string]string{"message": "ok"})
+		return
+	} else {
+		respondWithError(w, http.StatusInternalServerError, "pingpong service not responding")
+		return
+	}
+
 }
 
 func handler(w http.ResponseWriter, r *http.Request) {
@@ -130,5 +163,6 @@ func main() {
 	log.Printf("starting in address 0.0.0.0:%s.", port)
 
 	http.HandleFunc("/", handler)
+	http.HandleFunc("/health", health)
 	log.Fatal(http.ListenAndServe(fmt.Sprintf("0.0.0.0:%s", port), nil))
 }

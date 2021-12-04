@@ -57,6 +57,12 @@ spec:
               value: "3000"
             - name: APP_PING_PONG_HOST
               value: ping-pong-svc
+          readinessProbe:
+            initialDelaySeconds: 10 # Initial delay until the readiness is tested
+            periodSeconds: 10 # How often to test
+            httpGet:
+              path: /health
+              port: 3000
           resources:
             limits:
               cpu: "150m"
